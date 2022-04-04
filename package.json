@@ -1,0 +1,22 @@
+{
+  "name": "senpaientrega3-api",
+  "version": "1.0.0",
+  "description": "3a entrega FSD8 - api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/berrettadaniel/senpaiEntrega3-api.git"
+  },
+  "author": "DANIEL BERRETTA",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/berrettadaniel/senpaiEntrega3-api/issues"
+  },
+  "homepage": "https://github.com/berrettadaniel/senpaiEntrega3-api#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
