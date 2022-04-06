@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const empresasRouter = express.Router();
 
+//const empresas =
+
+module.exports = empresasRouter();
 
 /*
 {
