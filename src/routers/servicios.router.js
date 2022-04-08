@@ -2,6 +2,8 @@ const express = require('express');
 const serviciosRouter = express.Router();
 
 // Requerir autorizacion (auth.middleware)
+// DESCOMENTAR LA SIGUIENTE LINEA CUANDO ESTE PROGRAMADO EL "authMiddleware"
+// const { authMiddleware } = require("./../middlewares/auth.middleware");
 
 
 // Informacion "fake"
@@ -53,11 +55,40 @@ const servicios = [
 ];
 
 
-//Definir el GET
+//Definir el GET para toda la lista de servicios
 serviciosRouter.get("/", (request, response) => {
   const totalServicios = request.query.size;
   console.log("total de servicios obtenidos:", totalServicios);
   response.send(servicios);
 });
+
+
+//Definir el GET para un servicio por su id
+
+    //Cuando este definido el middleware el "get por idServicio" debe ser algo asi:
+    // serviciosRouter.get("/:idServicio", authMiddleWare (request, response) => {
+serviciosRouter.get("/:idServicio", (request, response) => {
+  let servicioHallado = null;
+
+  const servicioId = request.params.idServicio; //Obtengo el "id" del Servicio que viene en la ruta del navegador
+
+  //busco el servicio correspondiente a ese id
+  servicios.forEach((servicio) => {
+    if (servicio.id == servicioId) {
+      servicioHallado = servicio;
+    }
+  });
+
+  //si no existe debo dar el error
+  if (servicioHallado === null) {
+    response.statusCode = 404;
+    response.send({error: "No existe ese codigo de servicio"});
+    return;
+  };
+
+  //retorno el servicio hallado
+  response.send(servicioHallado);
+});
+
 
 module.exports = serviciosRouter;
