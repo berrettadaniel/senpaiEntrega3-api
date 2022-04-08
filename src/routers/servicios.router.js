@@ -56,8 +56,8 @@ const servicios = [
 
 //Definir el GET
 serviciosRouter.get("/", (request, response) => {
-  let totalServicios = request.query.size;
-  console.log("total de servicios obtenidos:" + totalServicios)
+  //let totalServicios = request.query.size;
+  //console.log("total de servicios obtenidos:" + totalServicios)
   response.send(servicios);
 });
 
