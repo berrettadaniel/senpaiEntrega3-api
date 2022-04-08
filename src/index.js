@@ -13,7 +13,6 @@ const empresasRoute = require('./routers/empresas.router');
 const serviciosRoute = require('./routers/servicios.router');
 const tareasRoute = require('./routers/tareas.router');
 const trabajosRoute = require('./routers/trabajos.router');
-//const { application } = require('express');
 
 //Requerir middlewares del "negocio"
 
@@ -21,8 +20,8 @@ const trabajosRoute = require('./routers/trabajos.router');
 //Utilizar los routers definidos para la API
 api.use("/empresas", empresasRoute);
 api.use("/servicios", serviciosRoute);
-//api.use("/tareas", tareasRoute);
-//api.use("/trabajos", trabajosRoute);
+api.use("/tareas", tareasRoute);
+api.use("/trabajos", trabajosRoute);
 
 
 //Requerir middlewares para "manejo de errores"
