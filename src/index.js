@@ -19,10 +19,10 @@ const trabajosRoute = require('./routers/trabajos.router');
 
 
 //Utilizar los routers definidos para la API
-//api.use("./empresas", empresasRoute);
+api.use("/empresas", empresasRoute);
 api.use("/servicios", serviciosRoute);
-//api.use("./tareas", tareasRoute);
-//api.use("./trabajos", trabajosRoute);
+//api.use("/tareas", tareasRoute);
+//api.use("/trabajos", trabajosRoute);
 
 
 //Requerir middlewares para "manejo de errores"
