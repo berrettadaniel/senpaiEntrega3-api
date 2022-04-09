@@ -54,8 +54,35 @@ const trabajos = [          // idTrabajo, idUsuario, idEmpresa, finalizado, fech
 
 //Definir el GET para toda la lista de trabajos
 trabajosRouter.get("/", (request, response) => {
-    response.send(trabajos);
-  });
+    let trabajosResultado = [];
+    let terminado = request.query.terminado;
+
+    if (terminado == undefined) {
+        response.send(trabajos);
+        return;
+    };
+
+    if (terminado == true) {
+        trabajosResultado.forEach((trabajo) => {
+            if (trabajo.finalizado) {
+                trabajosResultado.push(trabajo);
+            };
+        response.send(trabajosResultado)
+        return;
+        });
+    };
+
+    if (terminado == false) {
+        trabajosResultado.forEach((trabajo) => {
+            if (!trabajo.finalizado) {
+                trabajosResultado.push(trabajo);
+            };
+        response.send(trabajosResultado);
+        return;
+        })
+    };
+    
+});
 
 
 //Definir el GET para un trabajo dado por el id
