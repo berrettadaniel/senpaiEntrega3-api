@@ -1,18 +1,22 @@
-//idea
-//por cada empresa y usuario tengo "trabajos"
-//cada trabajo esta en transcurso o terminado
+//Idea de TRABAJOS:
+//Por cada empresa y usuario tengo "trabajos"
+//Cada trabajo esta en transcurso o terminado
+//Un usuario por empresa, puede tener en transcurso un solo trabajo, el resto deben estar finalizados.
+//De ese modo puedo filtrar en servicios.html las tareas que se estan realizando del trabajo que este activo para el usuario que esta logueado y la empresa seleccionada.
 
-// idTrabajo, idUsuario, idEmpresa, estado, fechaInicio, fechaFin
+
 
 const express = require('express');
 const trabajosRouter = express.Router();
 
 // Requerir autorizacion (auth.middleware)
+// DESCOMENTAR LA SIGUIENTE LINEA CUANDO ESTE PROGRAMADO EL "authMiddleware"
+// const { authMiddleware } = require("./../middlewares/auth.middleware");
 
 
 // Informacion "fake"
 
-const trabajos = [
+const trabajos = [          // idTrabajo, idUsuario, idEmpresa, finalizado, fechaInicio, fechaFin
     {
         idTrabajo: 1,
         idUsuario: 1,
@@ -48,9 +52,35 @@ const trabajos = [
 ];
 
 
-//Definir el GET
+//Definir el GET para toda la lista de trabajos
 trabajosRouter.get("/", (request, response) => {
     response.send(trabajos);
   });
-  
+
+
+//Definir el GET para un trabajo dado por el id
+trabajosRouter.get("/:idTrabajo", (request, response) => {
+    let trabajoHallado = null;
+
+    const trabajoId = request.params.idTrabajo; //Obtengo el "id" del trabajo que viene en la url del navegador
+
+    //busco el trabajo correspondiente a ese id
+    trabajos.forEach((trabajo) => {
+        if (trabajoId == trabajo.idTrabajo) {
+            trabajoHallado = trabajo;
+        };
+    });
+
+    //si no existe debo dar el error
+    if (trabajoHallado == null) {
+        response.statusCode = 404;
+        response.send({error: "No existe ese codigo de trabjo"});
+        return;
+    };
+
+    //retorno el trabajo hallado
+    response.send(trabajoHallado);
+});
+
+
 module.exports = trabajosRouter;

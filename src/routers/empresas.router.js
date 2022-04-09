@@ -2,6 +2,8 @@ const express = require('express');
 const empresasRouter = express.Router();
 
 // Requerir autorizacion (auth.middleware)
+// DESCOMENTAR LA SIGUIENTE LINEA CUANDO ESTE PROGRAMADO EL "authMiddleware"
+// const { authMiddleware } = require("./../middlewares/auth.middleware");
 
 
 // Informacion "fake"
@@ -47,9 +49,37 @@ const empresas = [
 ];
 
 
-//Definir el GET
+//Definir el GET para toda la lista de empresas
 empresasRouter.get("/", (request, response) => {
   response.send(empresas);
+});
+
+
+//Definir el GET para una empresa por su id
+
+    //Cuando este definido el middleware el "get por idEmpresa" debe ser algo asi:
+    // empresasRouter.get("/:idEmpresa", authMiddleWare (request, response) => {
+empresasRouter.get("/:idEmpresa", (request, response) => {
+  let empresaHallada = null;
+
+  const empresaId = request.params.idEmpresa; //Obtengo el idEmpresa que viene en la url del navegador
+
+  //busco la empresa correspondiente a ese id
+  empresas.forEach((empresa) => {
+    if (empresa.id == empresaId) {
+      empresaHallada = empresa;
+    };
+  });
+
+  //si no existe debo dar el error
+  if (empresaHallada == null) {
+    response.statusCode = 404;
+    response.send({error: "No existe ese codigo de empresa"});
+    return;
+  };
+
+  //Si existe la devuelve como resultado
+  response.send(empresaHallada);
 });
 
 module.exports = empresasRouter;
