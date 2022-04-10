@@ -1,3 +1,7 @@
+//API para los servicios que gestiona el sistema.
+//Por cada servicio se tiene un id, nombre, e imagenes para la UI.
+
+
 const express = require('express');
 const serviciosRouter = express.Router();
 
@@ -57,8 +61,13 @@ const servicios = [
 
 //Definir el GET para toda la lista de servicios
 serviciosRouter.get("/", (request, response) => {
-  const totalServicios = request.query.size;
-  console.log("total de servicios obtenidos:", totalServicios);
+// Esta parte del codigo fue solo a modo de prueba. Lo dejo comentado para tenerlo a futuro.
+//
+//  let totalServicios = 0;
+//  servicios.forEach((servicio) => {
+//    totalServicios += 1;
+//  });
+//  console.log("total de servicios obtenidos:", totalServicios);
   response.send(servicios);
 });
 
@@ -68,25 +77,24 @@ serviciosRouter.get("/", (request, response) => {
     //Cuando este definido el middleware el "get por idServicio" debe ser algo asi:
     // serviciosRouter.get("/:idServicio", authMiddleWare (request, response) => {
 serviciosRouter.get("/:idServicio", (request, response) => {
-  let servicioHallado = null;
-
+  let servicioHallado = null; //Inicializo variable de resultado
   const servicioId = request.params.idServicio; //Obtengo el "id" del Servicio que viene en la ruta del navegador
 
-  //busco el servicio correspondiente a ese id
+  //Busco el servicio correspondiente a ese id
   servicios.forEach((servicio) => {
     if (servicio.id == servicioId) {
       servicioHallado = servicio;
     }
   });
 
-  //si no existe debo dar el error
+  //Si no existe debo dar el error
   if (servicioHallado === null) {
     response.statusCode = 404;
     response.send({error: "No existe ese codigo de servicio"});
     return;
   };
 
-  //retorno el servicio hallado
+  //Retorno el servicio hallado
   response.send(servicioHallado);
 });
 

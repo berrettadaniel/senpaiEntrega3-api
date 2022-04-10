@@ -1,11 +1,12 @@
-//lista de tareas por cada trabajo
-//como cada trabajo tiene un idTrabajo, entonces aca por cada trabajo tengo:
+//API para Lista de Tareas por cada trabajo.
+//Cada trabajo tiene un idTrabajo, entonces en esta API para cada trabajo tenemos:
+//      - idTrabajo
+//      - fechaTarea
+//      - descripcionTarea
+//          idTrabajo y fechaTarea serian claves en una tabla de la BD.
 
-//idTrabajo, fechaTarea, descripcionTarea
-//idTrabajo y fechaTarea son clave
 
 const express = require('express');
-const { append } = require('express/lib/response');
 const tareasRouter = express.Router();
 
 // Requerir autorizacion (auth.middleware)
@@ -67,32 +68,26 @@ const tareas = [
 //Definir el GET para toda la lista de tareas
 tareasRouter.get("/", (request, response) => {
     response.send(tareas);
-  });
+});
 
 
-//Definir el GET para una lista de tareas correspondientes a un idTrabajo
+//Definir el GET para la lista de tareas correspondientes a un idTrabajo
+//El array vacio no lo considero como un error para considerar en el router, es el caso de
+//un trabajo para el que aun no se han registrado tareas.
+
 tareasRouter.get("/:idTrabajo", (request, response) => {
-    let tareasHalladas = [];
+    let tareasHalladas = []; //Inicializo variable de resultado.
 
     const trabajoId = request.params.idTrabajo; //Obtengo el "id" del trabajo que viene en la url del navegador
 
-    //PREGUNTAR AL PROFE SI PRIMERO DEBO VALIDAR QUE EL TRABAJO EXISTA Y EN ESE CASO COMO HAGO PARA
-    //ACCEDER A ESE ROUTER DESDE ESTE
-    //PORQUE SI EL TRABAJO NO EXISTE ENTONCES NO PUEDO DEVOLVER TAREAS,
-    //PERO PUEDE SUCEDER QUE EL TRABAJO EXISTA Y NO SE HAYAN GENERADO TAREAS AUN.
-    //
-    //    ***** VER SI REALMENTE LO HAGO ASI O SI NO CUANDO SE GENERA UN NUEVO TRABAJO AUTOMATICAMENTE LE AGREGO
-    //    ***** UNA TAREA INICIAL Y CON ESO ME ASEGURO QUE SIEMPRE HAY TAREAS
-
-
-    //busco las tareas del trabajo correspondiente a ese id
+    //Busco las tareas del trabajo correspondiente a ese id
     tareas.forEach((tarea) => {
         if (trabajoId == tarea.idTrabajo) {
             tareasHalladas.push(tarea);
         };
     });
 
-    //retorno la lista de tareas del trabajo hallado
+    //Retorno la lista de tareas del trabajo hallado
     response.send(tareasHalladas);
 });
 
