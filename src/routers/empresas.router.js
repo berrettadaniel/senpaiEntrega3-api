@@ -1,3 +1,5 @@
+//API para las empresas.
+
 const express = require('express');
 const empresasRouter = express.Router();
 
@@ -81,5 +83,22 @@ empresasRouter.get("/:idEmpresa", (request, response) => {
   //Si existe la devuelve como resultado
   response.send(empresaHallada);
 });
+
+
+//Definir el GET para obtener empresas por idServicio
+empresasRouter.get("/servicio/:idServicio", (request, response) => {
+  let empresasHalladas = []; //Inicializo variable de resultado
+  const ServicioId = request.params.idServicio; //Obtengo el id del servicio que viene como parametro
+
+  empresas.forEach((empresa) => {
+    if (empresa.idServicio == ServicioId) {
+      empresasHalladas.push(empresa);
+    };
+  });
+
+  //Devuelvo la lista de empresas halladas.
+  response.send(empresasHalladas);
+});
+
 
 module.exports = empresasRouter;
