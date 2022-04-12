@@ -85,7 +85,7 @@ empresasRouter.get("/:idEmpresa", authMiddleware, (request, response) => {
 
 
 //Definir el GET para obtener empresas por idServicio
-empresasRouter.get("/servicio/:idServicio", (request, response) => {
+empresasRouter.get("/servicio/:idServicio", authMiddleware, (request, response) => {
   let empresasHalladas = []; //Inicializo variable de resultado
   const ServicioId = request.params.idServicio; //Obtengo el id del servicio que viene como parametro
 
