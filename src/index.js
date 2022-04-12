@@ -9,23 +9,25 @@ const parser = require('body-parser');
 const api = express();
 
 //Requerir routers para la API
+const authRouter = require('./routers/auth.router');
 const empresasRoute = require('./routers/empresas.router');
 const serviciosRoute = require('./routers/servicios.router');
 const tareasRoute = require('./routers/tareas.router');
 const trabajosRoute = require('./routers/trabajos.router');
 
-//Requerir middlewares del "negocio"
-
+//Requerir middlewares
+const errorsMiddleware = require("./middlewares/errors.middleware");
 
 //Utilizar los routers definidos para la API
+api.use("/auth", authRouter);
 api.use("/empresas", empresasRoute);
 api.use("/servicios", serviciosRoute);
 api.use("/tareas", tareasRoute);
 api.use("/trabajos", trabajosRoute);
 
 
-//Requerir middlewares para "manejo de errores"
-
+//Utilizar middlewares para "manejo de errores"
+api.use(errorsMiddleware);
 
 
 //Levantar la API en puerto 4000 tal como estaba en la Entrega 2
