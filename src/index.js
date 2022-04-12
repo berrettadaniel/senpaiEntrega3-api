@@ -5,8 +5,10 @@ const parser = require('body-parser');
 // const path = require('path'); ---> ver si se va a precisar para manejo de archivos
 //                                    Tal vez puede servir para subir recibos o facturas
 
+
 //API del sistema
 const api = express();
+
 
 //Requerir routers para la API
 const authRouter = require('./routers/auth.router');
@@ -15,9 +17,15 @@ const serviciosRoute = require('./routers/servicios.router');
 const tareasRoute = require('./routers/tareas.router');
 const trabajosRoute = require('./routers/trabajos.router');
 
+
 //Requerir middlewares
 const notFoundMiddleware = require("./middlewares/notFound.middleware");
 const errorsMiddleware = require("./middlewares/errors.middleware");
+
+
+//Habilitar CORS
+api.use(cors());
+
 
 //Utilizar los routers definidos para la API
 api.use("/auth", authRouter);
