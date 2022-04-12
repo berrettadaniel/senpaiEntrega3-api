@@ -16,6 +16,7 @@ const tareasRoute = require('./routers/tareas.router');
 const trabajosRoute = require('./routers/trabajos.router');
 
 //Requerir middlewares
+const notFoundMiddleware = require("./middlewares/notFound.middleware");
 const errorsMiddleware = require("./middlewares/errors.middleware");
 
 //Utilizar los routers definidos para la API
@@ -27,6 +28,7 @@ api.use("/trabajos", trabajosRoute);
 
 
 //Utilizar middlewares para "manejo de errores"
+api.all("/*", notFoundMiddleware); //Si no matchea con ninguna de las rutas anteriores, da error de ruta inexistente
 api.use(errorsMiddleware);
 
 
