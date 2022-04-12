@@ -4,8 +4,7 @@ const express = require('express');
 const empresasRouter = express.Router();
 
 // Requerir autorizacion (auth.middleware)
-// DESCOMENTAR LA SIGUIENTE LINEA CUANDO ESTE PROGRAMADO EL "authMiddleware"
-// const { authMiddleware } = require("./../middlewares/auth.middleware");
+const { authMiddleware } = require("./../middlewares/auth.middleware");
 
 
 // Informacion "fake"
@@ -60,8 +59,8 @@ empresasRouter.get("/", (request, response) => {
 //Definir el GET para una empresa por su id
 
     //Cuando este definido el middleware el "get por idEmpresa" debe ser algo asi:
-    // empresasRouter.get("/:idEmpresa", authMiddleWare (request, response) => {
-empresasRouter.get("/:idEmpresa", (request, response) => {
+empresasRouter.get("/:idEmpresa", authMiddleware, (request, response) => {
+//empresasRouter.get("/:idEmpresa", (request, response) => {
   let empresaHallada = null;
 
   const empresaId = request.params.idEmpresa; //Obtengo el idEmpresa que viene en la url del navegador
