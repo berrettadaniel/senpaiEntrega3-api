@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 
 //Requerir el string de encriptacion definido en el middleware
 const { JWT_SECRET } = require("../middlewares/auth.middleware");
-const { response } = require("express");
+//const { response } = require("express");
 
 
 //Crear el router
@@ -71,5 +71,29 @@ authRouter.post("/login", async (request, response) => {
     });
 });
 
+
+//Definir el POST para registrar un nuevo usuario haciendo las validaciones correspondientes.
+authRouter.post("/register", (request, response) => {
+    const password = request.body.password; /// FALTA ENCRIPTARLA
+
+    const email = request.body.email; //Verifico si el usuario ya existe
+    usuarios.forEach((usuario) =>{
+        if (usuario.email === email) {
+            return response.status(400).send({
+                error: "Usuario existente",
+            });
+        };
+    });
+
+    const nuevoUsuario = {
+        email: request.body.email,
+        password: password  //ACA SE ASIGNARA EL VALOR INGRESADO EN LA UI ENCRIPTADO
+    };
+    usuarios.push(nuevoUsuario);
+    console.log(usuarios);
+
+    response.json({success: true, nuevoUsuario, usuarios });
+
+});
 
 module.exports = authRouter;

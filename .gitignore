@@ -1,5 +1,7 @@
 /node_modules
 /.vscode
+/.env
+
 
 
 # ref.: https://www.atlassian.com/es/git/tutorials/saving-changes/gitignore

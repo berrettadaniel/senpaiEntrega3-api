@@ -1,7 +1,8 @@
 //Requerir librerias externas (Node y Express)
 const cors = require('cors');
 const express = require('express');
-const parser = require('body-parser');
+const bodyParser = require('body-parser'); //libreria para parsear valores que vienen en un request.
+                                           //Ej. request.body.email
 // const path = require('path'); ---> ver si se va a precisar para manejo de archivos
 //                                    Tal vez puede servir para subir recibos o facturas
 
@@ -23,8 +24,12 @@ const notFoundMiddleware = require("./middlewares/notFound.middleware");
 const errorsMiddleware = require("./middlewares/errors.middleware");
 
 
-//Habilitar CORS
+//Habilito librerias externas instaladas, que ya fueron requeridas mas arriba
+// - CORS
 api.use(cors());
+// - bodyParser
+api.use(bodyParser.urlencoded({ extended: false }));
+api.use(bodyParser.json());
 
 
 //Utilizar los routers definidos para la API
