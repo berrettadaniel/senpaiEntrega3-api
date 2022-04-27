@@ -15,36 +15,42 @@ const empresas = [
       "id": 1,
       "nombre": "MetaCucharin",
       "telefono": "099111111",
+      "email": "consulta@metacucharin.com",
       "idServicio": 1    //Albanileria
     },
     {
       "id": 2,
       "nombre": "Cable pelado",
       "telefono": "099231111",
+      "email": "consulta@cablepelado.com",
       "idServicio": 3    //Electricidad
     },
     {
       "id": 3,
       "nombre": "TablaAstillada",
       "telefono": "099321111",
+      "email": "consulta@tablaastillada.com",
       "idServicio": 2    //Carpinteria
     },
     {
       "id": 4,
       "nombre": "ClavoEnElDedo",
       "telefono": "099421111",
+      "email": "consulta@clavoeneldedo.com",
       "idServicio": 2    //Carpinteria
     },
     {
       "id": 5,
       "nombre": "ChauMosquito",
       "telefono": "099541111",
+      "email": "consulta@chaumosquito.com",
       "idServicio": 4    //Fumigacion
     },
     {
       "id": 6,
       "nombre": "CueritoFlojo",
       "telefono": "099671111",
+      "email": "consulta@cueritoflojo.com",
       "idServicio": 7    //Sanitaria
     }
 ];
