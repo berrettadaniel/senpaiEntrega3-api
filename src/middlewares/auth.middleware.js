@@ -1,4 +1,4 @@
-const { request } = require("express");
+//const { request } = require("express");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = "Daniel3aEntrega"; //Establezco el string que utilizara el hash para encriptar
 

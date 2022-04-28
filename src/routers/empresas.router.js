@@ -64,9 +64,12 @@ empresasRouter.get("/", (request, response) => {
 
 //Definir el GET para una empresa por su id
 
-    //Cuando este definido el middleware el "get por idEmpresa" debe ser algo asi:
-empresasRouter.get("/:idEmpresa", authMiddleware, (request, response) => {
-//empresasRouter.get("/:idEmpresa", (request, response) => {
+//No utilizare el middleware porque no quedo funcionando correctamente la api de authorization.
+//Con el authmiddleware no me aparecen las empresas de un servicio en la UI (serviciopage.jsx)
+//Debi dejarlo asi para poder probar el uso de Base de Datos. :(
+
+//empresasRouter.get("/:idEmpresa", authMiddleware, (request, response) => {
+empresasRouter.get("/:idEmpresa", (request, response) => {
   let empresaHallada = null;
 
   const empresaId = request.params.idEmpresa; //Obtengo el idEmpresa que viene en la url del navegador
@@ -91,7 +94,8 @@ empresasRouter.get("/:idEmpresa", authMiddleware, (request, response) => {
 
 
 //Definir el GET para obtener empresas por idServicio
-empresasRouter.get("/servicio/:idServicio", authMiddleware, (request, response) => {
+//empresasRouter.get("/servicio/:idServicio", authMiddleware, (request, response) => {
+empresasRouter.get("/servicio/:idServicio", (request, response) => {
   let empresasHalladas = []; //Inicializo variable de resultado
   const ServicioId = request.params.idServicio; //Obtengo el id del servicio que viene como parametro
 

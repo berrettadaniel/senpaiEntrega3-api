@@ -18,7 +18,7 @@ const authRouter = express.Router();
 const usuarios = [
     {
         email: "berretta.daniel@gmail.com",
-        password: "",
+        password: "$2b$10$O9h1BWHlw2ag3jtV1y8raOrR8ucVsyBSuWDtdLSarUhacoHL0pY.2" //123
     },
     {
         email: "gustavguez@gmail.com",
@@ -31,26 +31,27 @@ const usuarios = [
 authRouter.post("/login", async (request, response) => {
     //Obtengo parametros que viene en el body del request.
     const email = request.body.email;
-    const password = request.body.password;
+    const passwordValor = request.body.password;
 
     //Verifico si el usuario esta en la BD
-    const usuario = usuarios.find((usuarioSistema) => {
-        return usuarioSistema.email === email;
-    })
-
+    const usuario = usuarios.find((usuarioSistema) => usuarioSistema.email === email);
+    console.log("usuario", usuario);
+    console.log(passwordValor);
     //Si el usuario no existe, devuelvo un error
     if (!usuario) {
-        return response.status(400).send({
-            error: "Usuario inexistente"
-        });
+        return response.status(400).send({error: "Usuario inexistente"});
     }
 
     //Verifico si la clave enviada es igual a la del usuario
-    const esIgualPassword = await bcrypt.compare(password, usuario.password);
+    const esIgualPassword = await bcrypt.compare(passwordValor, usuario.password);
+
+    //const valorSalt = await bcrypt.getRounds(usuario.password);
+    //console.log("valorSalt", valorSalt);
+    //const esigual = await bcrypt.hash(passwordValor, valorSalt) === usuario.password;
+    //console.log("esigual", esigual);
+
     if (!esIgualPassword) {
-      return response.status(400).send({
-        error: "Clave incorrecta",
-      });
+        return response.status(400).send({error: "Clave incorrecta"});
     }
 
     //El usuario esta autenticado, entonces se puede generar el jwt
@@ -66,17 +67,25 @@ authRouter.post("/login", async (request, response) => {
     //En el token se devuelve el JsonWebToken que se utiliza como "variable de sesion"
     response.send({
         error: null,
-        mensage: "¡Login correcto!",
+        mensaje: "¡Login correcto!",
         token: token,
     });
 });
 
 
 //Definir el POST para registrar un nuevo usuario haciendo las validaciones correspondientes.
-authRouter.post("/register", (request, response) => {
-    const password = request.body.password; /// FALTA ENCRIPTARLA
+authRouter.post("/register", async (request, response) => {
+
+    const saltValor = await bcrypt.genSalt(10);
+    const passwordValor = request.body.password;
+    const password = await bcrypt.hash(passwordValor, saltValor); /// FALTA ENCRIPTARLA
 
     const email = request.body.email; //Verifico si el usuario ya existe
+
+    console.log(email, passwordValor, password);
+
+    /*
+
     usuarios.forEach((usuario) =>{
         if (usuario.email === email) {
             return response.status(400).send({
@@ -93,6 +102,8 @@ authRouter.post("/register", (request, response) => {
     console.log(usuarios);
 
     response.json({success: true, nuevoUsuario, usuarios });
+    */
+   response.json({success: true});
 
 });
 
