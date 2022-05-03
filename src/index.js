@@ -6,6 +6,8 @@ const bodyParser = require('body-parser'); //libreria para parsear valores que v
 // const path = require('path'); ---> ver si se va a precisar para manejo de archivos
 //                                    Tal vez puede servir para subir recibos o facturas
 
+//Levantar variables de entorno
+require("dotenv").config();
 
 //API del sistema
 const api = express();
