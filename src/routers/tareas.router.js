@@ -8,6 +8,8 @@
 
 const express = require('express');
 const tareasRouter = express.Router();
+const db = require("../configs/db"); // ======>>> NO FUNCIONO
+const { Client } = require("pg");
 
 // Requerir autorizacion (auth.middleware)
 // DESCOMENTAR LA SIGUIENTE LINEA CUANDO ESTE PROGRAMADO EL "authMiddleware"
@@ -16,7 +18,7 @@ const tareasRouter = express.Router();
 
 // Informacion "fake"
 
-const tareas = [
+const tareasFAKE = [
     {
         idTrabajo: 1,
         fecha: '20/01/2022',
@@ -66,7 +68,17 @@ const tareas = [
 
 
 //Definir el GET para toda la lista de tareas
-tareasRouter.get("/", (request, response) => {
+tareasRouter.get("/", async (request, response) => {
+    //Conexion a la BD
+    const client = new Client();
+    await client.connect();
+
+    //Query a la BD
+    const responseBD = await client.query('select * from tareas;');
+    const tareas = responseBD.rows; //Obtengo el array de registros de la query a la BD
+                                        //Es lo que inicialmente lo cargaba como un array "hard code" en este router
+    await client.end();
+    //Cierre de conexion
     response.send(tareas);
 });
 
@@ -75,21 +87,47 @@ tareasRouter.get("/", (request, response) => {
 //El array vacio no lo considero como un error para considerar en el router, es el caso de
 //un trabajo para el que aun no se han registrado tareas.
 
-tareasRouter.get("/:idTrabajo", (request, response) => {
-    let tareasHalladas = []; //Inicializo variable de resultado.
-
+tareasRouter.get("/:idTrabajo", async (request, response) => {
     const trabajoId = request.params.idTrabajo; //Obtengo el "id" del trabajo que viene en la url del navegador
+    //Conexion a la BD
+    const client = new Client();
+    await client.connect();
 
-    //Busco las tareas del trabajo correspondiente a ese id
-    tareas.forEach((tarea) => {
-        if (trabajoId == tarea.idTrabajo) {
-            tareasHalladas.push(tarea);
-        };
-    });
+    //Query a la BD
+    const responseBD = await client.query('select * from tareas where idTrabajo=$1;', [trabajoId]);
+    const trabajos = responseBD.rows; //Obtengo el array de registros de la query a la BD
+                                      //Es lo que inicialmente lo cargaba como un array "hard code" en este router
+    await client.end();
+    //Cierre de conexion
 
     //Retorno la lista de tareas del trabajo hallado
-    response.send(tareasHalladas);
+    response.send(trabajos);
 });
 
+
+
+//Definir el PUT para insertar una tarea
+tareasRouter.put("/", async (request, response) => {
+    const idTrabajoIns = 2; //Para el obligatorio dejo fijo el trabajo con Id = 2 que es el que esta activo
+    //Obtengo el resto de loa parametros que vienen en el body del request
+    const fechaIns = request.body.fecha;
+    const descripcionIns = request.body.descripcion;
+    const idEmpresaIns = request.body.idEmpresa;
+
+    //Conexion a la BD
+    const client = new Client();
+    await client.connect();
+
+    //Query a la BD
+    //  Texto fijo de la query
+    const textoInsert = 'insert into tareas (idtrabajo, fecha, descripcion, idempresa) values ($1, $2, $3, $4);';
+    //  Ejecuto el cliente con la query y los valores a insertar
+    const responseBD = await client.query(textoInsert, [idTrabajoIns, fechaIns, descripcionIns, idEmpresaIns]);
+    const trabajos = responseBD.rows;
+    await client.end();
+    //Cierre de conexion
+
+    response.send(trabajos);
+})
 
 module.exports = tareasRouter;

@@ -4,6 +4,8 @@
 
 const express = require('express');
 const serviciosRouter = express.Router();
+const db = require("../configs/db"); // ======>>> NO FUNCIONO
+const { Client } = require("pg");
 
 // Requerir autorizacion (auth.middleware)
 // DESCOMENTAR LA SIGUIENTE LINEA CUANDO ESTE PROGRAMADO EL "authMiddleware"
@@ -13,7 +15,7 @@ const serviciosRouter = express.Router();
 // Informacion "fake"
 // Devolvere lo que tenia en el db.json de la Entrega 2
 
-const servicios = [
+const serviciosFAKE = [
   {
     id: 1,
     nombre: "Albañileria",
@@ -60,7 +62,19 @@ const servicios = [
 
 
 //Definir el GET para toda la lista de servicios
-serviciosRouter.get("/", (request, response) => {
+serviciosRouter.get("/", async (request, response) => {
+    //Conexion a la BD
+    const client = new Client();
+    await client.connect();
+
+    //Query a la BD
+    const responseBD = await client.query('select * from servicios;');
+    const servicios = responseBD.rows; //Obtengo el array de registros de la query a la BD
+                                        //Es lo que inicialmente lo cargaba como un array "hard code" en este router
+    await client.end();
+    //Cierre de conexion
+
+    response.send(servicios);
 // Esta parte del codigo fue solo a modo de prueba. Lo dejo comentado para tenerlo a futuro.
 //
 //  let totalServicios = 0;
@@ -68,7 +82,6 @@ serviciosRouter.get("/", (request, response) => {
 //    totalServicios += 1;
 //  });
 //  console.log("total de servicios obtenidos:", totalServicios);
-  response.send(servicios);
 });
 
 
@@ -76,10 +89,23 @@ serviciosRouter.get("/", (request, response) => {
 
     //Cuando este definido el middleware el "get por idServicio" debe ser algo asi:
     // serviciosRouter.get("/:idServicio", authMiddleWare (request, response) => {
-serviciosRouter.get("/:idServicio", (request, response) => {
-  let servicioHallado = null; //Inicializo variable de resultado
+serviciosRouter.get("/:idServicio", async (request, response) => {
   const servicioId = request.params.idServicio; //Obtengo el "id" del Servicio que viene en la ruta del navegador
 
+  //Conexion a la BD
+  const client = new Client();
+  await client.connect();
+
+  //Query a la BD
+  const responseBD = await client.query('select * from servicios where id=$1;',[servicioId]);
+  const servicioHallado = responseBD.rows[0]; //Obtengo el array de registros de la query a la BD
+  await client.end();
+  //Cierre de conexion
+
+  //Retorno el servicio hallado
+  response.send(servicioHallado);
+
+/*  
   //Busco el servicio correspondiente a ese id
   servicios.forEach((servicio) => {
     if (servicio.id == servicioId) {
@@ -96,6 +122,7 @@ serviciosRouter.get("/:idServicio", (request, response) => {
 
   //Retorno el servicio hallado
   response.send(servicioHallado);
+*/
 });
 
 
