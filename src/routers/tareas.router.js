@@ -118,16 +118,21 @@ tareasRouter.put("/", async (request, response) => {
     const client = new Client();
     await client.connect();
 
+    const responseSelBD = await client.query('select * from tareas where idTrabajo=$1', [idTrabajoIns]);
+    console.log('Cant Trabajos Antes: ', responseSelBD.rowCount);
+
     //Query a la BD
     //  Texto fijo de la query
     const textoInsert = 'insert into tareas (idtrabajo, fecha, descripcion, idempresa) values ($1, $2, $3, $4);';
     //  Ejecuto el cliente con la query y los valores a insertar
-    const responseBD = await client.query(textoInsert, [idTrabajoIns, fechaIns, descripcionIns, idEmpresaIns]);
-    const trabajos = responseBD.rows;
+
+    let responseBD = await client.query(textoInsert, [idTrabajoIns, fechaIns, descripcionIns, idEmpresaIns]);
+    responseBD = await client.query('select * from tareas where idTrabajo=$1', [idTrabajoIns]);
+    console.log('Cant Trabajos Despues: ', responseBD.rowCount);
     await client.end();
     //Cierre de conexion
 
-    response.send(trabajos);
-})
+    response.send('ok');
+});
 
 module.exports = tareasRouter;
