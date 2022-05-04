@@ -3,7 +3,7 @@
 //      - idTrabajo
 //      - fechaTarea
 //      - descripcionTarea
-//          idTrabajo y fechaTarea serian claves en una tabla de la BD.
+//      - id de la empresa con la que se hace el trabajo
 
 
 const express = require('express');
@@ -17,7 +17,8 @@ const { Client } = require("pg");
 
 
 // Informacion "fake"
-
+// Este array lo utilizamos mientras no tenemos la BD implementada.
+// No deberia dejarlo en el codigo, pero lo guardo a los efectos ilustrativos y a modo de anotaciones a futuro.
 const tareasFAKE = [
     {
         idTrabajo: 1,
@@ -67,7 +68,10 @@ const tareasFAKE = [
 ];
 
 
-//Definir el GET para toda la lista de tareas
+
+//EndPoints de la API
+
+// GET para toda la lista de tareas
 tareasRouter.get("/", async (request, response) => {
     //Conexion a la BD
     const client = new Client();
@@ -75,15 +79,15 @@ tareasRouter.get("/", async (request, response) => {
 
     //Query a la BD
     const responseBD = await client.query('select * from tareas;');
-    const tareas = responseBD.rows; //Obtengo el array de registros de la query a la BD
-                                        //Es lo que inicialmente lo cargaba como un array "hard code" en este router
+    const tareas = responseBD.rows; //Obtengo un array con todos los registros de la query a la BD
+
     await client.end();
     //Cierre de conexion
     response.send(tareas);
 });
 
 
-//Definir el GET para la lista de tareas correspondientes a un idTrabajo
+// GET para la lista de tareas correspondientes a un idTrabajo
 //El array vacio no lo considero como un error para considerar en el router, es el caso de
 //un trabajo para el que aun no se han registrado tareas.
 
@@ -95,8 +99,8 @@ tareasRouter.get("/:idTrabajo", async (request, response) => {
 
     //Query a la BD
     const responseBD = await client.query('select * from tareas where idTrabajo=$1;', [trabajoId]);
-    const trabajos = responseBD.rows; //Obtengo el array de registros de la query a la BD
-                                      //Es lo que inicialmente lo cargaba como un array "hard code" en este router
+    const trabajos = responseBD.rows; //Obtengo un array con todos los registros de la query a la BD
+
     await client.end();
     //Cierre de conexion
 
@@ -106,33 +110,47 @@ tareasRouter.get("/:idTrabajo", async (request, response) => {
 
 
 
-//Definir el PUT para insertar una tarea
+// PUT para insertar una tarea
 tareasRouter.put("/", async (request, response) => {
-    const idTrabajoIns = 2; //Para el obligatorio dejo fijo el trabajo con Id = 2 que es el que esta activo
+    const idTrabajoIns = 2; //Para el obligatorio dejo fijo el trabajo con Id = 2, es el que esta activo
+
     //Obtengo el resto de loa parametros que vienen en el body del request
     const fechaIns = request.body.fecha;
     const descripcionIns = request.body.descripcion;
     const idEmpresaIns = request.body.idEmpresa;
 
-    //Conexion a la BD
+    //Conexion a la BD 
     const client = new Client();
-    await client.connect();
 
-    const responseSelBD = await client.query('select * from tareas where idTrabajo=$1', [idTrabajoIns]);
-    console.log('Cant Trabajos Antes: ', responseSelBD.rowCount);
+    try {
+        await client.connect();
 
-    //Query a la BD
-    //  Texto fijo de la query
-    const textoInsert = 'insert into tareas (idtrabajo, fecha, descripcion, idempresa) values ($1, $2, $3, $4);';
-    //  Ejecuto el cliente con la query y los valores a insertar
+        //Esto lo hago para mostrar en consola la cantidad de registros que hay antes
+        //y los que hay despues del insert, solo para verificar la API por Postman.
+        //Lo dejo solo para tenerlo de referencia y ejemplo.
+        const responseSelBD = await client.query('select * from tareas where idTrabajo=$1', [idTrabajoIns]);
+        console.log('Cant Trabajos Antes: ', responseSelBD.rowCount);
 
-    let responseBD = await client.query(textoInsert, [idTrabajoIns, fechaIns, descripcionIns, idEmpresaIns]);
-    responseBD = await client.query('select * from tareas where idTrabajo=$1', [idTrabajoIns]);
-    console.log('Cant Trabajos Despues: ', responseBD.rowCount);
-    await client.end();
-    //Cierre de conexion
+        //Query a la BD para hacer el insert
 
-    response.send('ok');
+        //  Texto fijo de la query
+        const textoInsert = 'insert into tareas (idtrabajo, fecha, descripcion, idempresa) values ($1, $2, $3, $4);';
+
+        //  Ejecuto el cliente con la query y los valores a insertar
+        let responseBD = await client.query(textoInsert, [idTrabajoIns, fechaIns, descripcionIns, idEmpresaIns]);
+
+        //Muestro en consola la cantidad de registros que quedaron en la tabla despues del insert
+        responseBD = await client.query('select * from tareas where idTrabajo=$1', [idTrabajoIns]);
+        console.log('Cant Trabajos Despues: ', responseBD.rowCount);
+        
+        await client.end();
+        //Cierre de conexion
+
+        response.send('ok');
+
+    } catch (error) {
+         response.send({mensaje: "Tarea no agregada"});   
+    }
 });
 
 module.exports = tareasRouter;

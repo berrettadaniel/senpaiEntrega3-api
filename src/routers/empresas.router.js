@@ -11,6 +11,8 @@ const { authMiddleware } = require("./../middlewares/auth.middleware");
 
 // Informacion "fake"
 // Devolvere una lista de empresas que despues debo obtener de la Base de Datos
+// Como en los demas casos, dejo el codigo correspondiente a la carga manual de un array para tenerlo con
+// fines didacticos.
 
 const empresasFAKE = [
     {
@@ -58,7 +60,10 @@ const empresasFAKE = [
 ];
 
 
-//Definir el GET para toda la lista de empresas
+
+//EndPoinst de la API
+
+// GET para toda la lista de empresas
 empresasRouter.get("/", async (request, response) => {
 
   //Conexion a la BD
@@ -68,7 +73,7 @@ empresasRouter.get("/", async (request, response) => {
   //Query a la BD
   const responseBD = await client.query('select * from empresas;');
   const empresas = responseBD.rows; //Obtengo el array de registros de la query a la BD
-                                    //Es lo que inicialmente lo cargaba como un array "hard code" en este router
+
   await client.end();
   //Cierre de conexion
   
@@ -76,11 +81,11 @@ empresasRouter.get("/", async (request, response) => {
 });
 
 
-//Definir el GET para una empresa por su id
+// GET para una empresa por su id
 
-//No utilizare el middleware porque no quedo funcionando correctamente la api de authorization.
-//Con el authmiddleware no me aparecen las empresas de un servicio en la UI (serviciopage.jsx)
-//Debi dejarlo asi para poder probar el uso de Base de Datos. :(
+    //No utilizare el middleware porque no quedo funcionando correctamente la api de authorization.
+    //Con el authmiddleware no me aparecen las empresas de un servicio en la UI (serviciopage.jsx)
+    //Debi dejarlo asi para poder probar el uso de Base de Datos. :(
 
 //empresasRouter.get("/:idEmpresa", authMiddleware, (request, response) => {
 empresasRouter.get("/:idEmpresa", async (request, response) => {
@@ -88,18 +93,19 @@ empresasRouter.get("/:idEmpresa", async (request, response) => {
 
   //Conexion a la BD
   const client = new Client();
+
   try{
-  await client.connect();
+    await client.connect();
 
-  //Query a la BD
-  const responseBD = await client.query('select * from empresas where id=$1;', [empresaId]);
-  const empresaHallada = responseBD.rows[0]; //Obtengo el array de registros de la query a la BD
-                                    //Es lo que inicialmente lo cargaba como un array "hard code" en este router
-  await client.end();
-  //Cierre de conexion
+    //Query a la BD
+    const responseBD = await client.query('select * from empresas where id=$1;', [empresaId]);
+    const empresaHallada = responseBD.rows[0]; //Obtengo el array de registros de la query a la BD
 
-  //Si existe la devuelve como resultado
-  response.send(empresaHallada);
+    await client.end();
+    //Cierre de conexion
+
+    //Si existe la devuelve como resultado
+    response.send(empresaHallada);
   }
 
   catch (empresaHallada) {
@@ -108,7 +114,7 @@ empresasRouter.get("/:idEmpresa", async (request, response) => {
     return;
   }
 
-/*
+/* Este era el codigo original cuando la lista de empresas era el array "fake"
   //busco la empresa correspondiente a ese id
   empresas.forEach((empresa) => {
     if (empresa.id == empresaId) {
@@ -129,7 +135,7 @@ empresasRouter.get("/:idEmpresa", async (request, response) => {
 });
 
 
-//Definir el GET para obtener empresas por idServicio
+// GET para obtener empresas por idServicio
 //empresasRouter.get("/servicio/:idServicio", authMiddleware, (request, response) => {
 empresasRouter.get("/servicio/:idServicio", async (request, response) => {
   let empresasHalladas = []; //Inicializo variable de resultado
@@ -137,13 +143,14 @@ empresasRouter.get("/servicio/:idServicio", async (request, response) => {
 
   //Conexion a la BD
   const client = new Client();
+
   try{
     await client.connect();
 
     //Query a la BD
     const responseBD = await client.query('select * from empresas where idServicio=$1;', [ServicioId]);
     const empresasHalladas = responseBD.rows; //Obtengo el array de registros de la query a la BD
-                                      //Es lo que inicialmente lo cargaba como un array "hard code" en este router
+
     await client.end();
     //Cierre de conexion
 
@@ -156,7 +163,8 @@ empresasRouter.get("/servicio/:idServicio", async (request, response) => {
     response.send({error: "No existen empresas para ese servicio"});
     return;
   }
-/*
+
+/* Este era el codigo original cuando la lista de empresas era el array "fake"
   empresas.forEach((empresa) => {
     if (empresa.idServicio == ServicioId) {
       empresasHalladas.push(empresa);

@@ -18,6 +18,9 @@ const { Client } = require("pg");
 
 
 // Informacion "fake"
+// Queda el array "fake" para fines didacticos recordando que se debe hacer mientras no tenemos la BD
+// y estamos definiendo las APIs
+
 const trabajosFAKE = [          // idTrabajo, idUsuario, idEmpresa, finalizado, fechaInicio, fechaFin
     {
         idTrabajo: 1,
@@ -54,7 +57,9 @@ const trabajosFAKE = [          // idTrabajo, idUsuario, idEmpresa, finalizado, 
 ];
 
 
-//Definir el GET para toda la lista de trabajos o con query param, para filtrarlos por estado terminado o no.
+//EndPoints de la API
+
+// GET para toda la lista de trabajos o con query param, para filtrarlos por estado terminado o no.
 //El atributo en el "trabajo" que devuelve la API es "finalizado" (boolean).
 //Para utilizar el query param, debe ser "terminado=true" o "terminado=false".
 
@@ -77,7 +82,6 @@ trabajosRouter.get("/", async (request, response) => {
                                       //Es lo que inicialmente lo cargaba como un array "hard code" en este router
     await client.end();
     //Cierre de conexion
-
 
 //    const responseBD = await db.query("select * from trabajos;"); //======>>> NO FUNCIONO
 //    const trabajos = responseBD.rows;
@@ -112,8 +116,7 @@ trabajosRouter.get("/", async (request, response) => {
 });
 
 
-
-//Definir el GET para un trabajo dado por el id
+// GET para un trabajo dado por el id
 trabajosRouter.get("/:idTrabajo", async (request, response) => {
     let trabajoHallado = null; //Inicializo variable que devuelve la API.
     const trabajoId = request.params.idTrabajo; //Obtengo el "id" del trabajo que viene en la url del navegador
@@ -125,24 +128,10 @@ trabajosRouter.get("/:idTrabajo", async (request, response) => {
     //Query a la BD
     const responseBD = await client.query('select * from trabajos where id=$1;',[trabajoId]);
     trabajoHallado = responseBD.rows[0]; //Obtengo el array de registros de la query a la BD
-                                        //Es lo que inicialmente lo cargaba como un array "hard code" en este router
+
     await client.end();
     //Cierre de conexion
-/*    
-    //Busco el trabajo correspondiente a ese id
-    trabajos.forEach((trabajo) => {
-        if (trabajoId == trabajo.idTrabajo) {
-            trabajoHallado = trabajo;
-        };
-    });
 
-    //Si no existe debo dar el error
-    if (trabajoHallado == null) {
-        response.statusCode = 404;
-        response.send({error: "No existe ese codigo de trabjo"});
-        return;
-    };
-*/
     //Retorno el trabajo hallado en caso que no haya habido error.
     response.send(trabajoHallado);
 });

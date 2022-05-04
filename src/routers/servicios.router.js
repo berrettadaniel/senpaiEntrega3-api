@@ -14,6 +14,7 @@ const { Client } = require("pg");
 
 // Informacion "fake"
 // Devolvere lo que tenia en el db.json de la Entrega 2
+// Ahora los datos vienen de la BD, queda el array "fake" con fines didacticos igual al resto
 
 const serviciosFAKE = [
   {
@@ -61,7 +62,9 @@ const serviciosFAKE = [
 ];
 
 
-//Definir el GET para toda la lista de servicios
+//EndPoinst de la API
+
+// GET para toda la lista de servicios
 serviciosRouter.get("/", async (request, response) => {
     //Conexion a la BD
     const client = new Client();
@@ -69,12 +72,13 @@ serviciosRouter.get("/", async (request, response) => {
 
     //Query a la BD
     const responseBD = await client.query('select * from servicios;');
-    const servicios = responseBD.rows; //Obtengo el array de registros de la query a la BD
-                                        //Es lo que inicialmente lo cargaba como un array "hard code" en este router
+    const servicios = responseBD.rows; //Obtengo en un array los registros de la query a la BD
+
     await client.end();
     //Cierre de conexion
 
     response.send(servicios);
+
 // Esta parte del codigo fue solo a modo de prueba. Lo dejo comentado para tenerlo a futuro.
 //
 //  let totalServicios = 0;
@@ -85,10 +89,10 @@ serviciosRouter.get("/", async (request, response) => {
 });
 
 
-//Definir el GET para un servicio por su id
-
+// GET para un servicio por su id
     //Cuando este definido el middleware el "get por idServicio" debe ser algo asi:
     // serviciosRouter.get("/:idServicio", authMiddleWare (request, response) => {
+
 serviciosRouter.get("/:idServicio", async (request, response) => {
   const servicioId = request.params.idServicio; //Obtengo el "id" del Servicio que viene en la ruta del navegador
 
@@ -98,14 +102,16 @@ serviciosRouter.get("/:idServicio", async (request, response) => {
 
   //Query a la BD
   const responseBD = await client.query('select * from servicios where id=$1;',[servicioId]);
-  const servicioHallado = responseBD.rows[0]; //Obtengo el array de registros de la query a la BD
+  const servicioHallado = responseBD.rows[0]; //Obtengo en un array los registros de la query a la BD
+
   await client.end();
   //Cierre de conexion
 
   //Retorno el servicio hallado
   response.send(servicioHallado);
 
-/*  
+  
+/* Este es el codigo que utilizaba cuando la lista de servicios era el array "fake"
   //Busco el servicio correspondiente a ese id
   servicios.forEach((servicio) => {
     if (servicio.id == servicioId) {

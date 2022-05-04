@@ -6,6 +6,7 @@ const bodyParser = require('body-parser'); //libreria para parsear valores que v
 // const path = require('path'); ---> ver si se va a precisar para manejo de archivos
 //                                    Tal vez puede servir para subir recibos o facturas
 
+
 //Levantar variables de entorno
 require("dotenv").config();
 
@@ -54,6 +55,8 @@ api.listen(4000, () => {
 
 
 /*
+-- Analisis inicial tal como vimos en clase para encontrar las diferente entidades --
+
 listar es un GET
 seleccionar es un GET con algun ID
 agregar es un POST

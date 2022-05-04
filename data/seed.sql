@@ -79,4 +79,4 @@ insert into tareas (idtrabajo, fecha, descripcion, idempresa) values
 (2, '20220108', 'prueba2', 2);
 
 -- A los efectos de poder probar un insert desde la UI, cualquiera sea el servicio elegido, en todos los casos
--- considerare tareas para el codigo de empresa 2
+-- considerare tareas para el codigo de trabajo 2 (idTrabajo = 2). Es el trabajo que deje como no finalizado.

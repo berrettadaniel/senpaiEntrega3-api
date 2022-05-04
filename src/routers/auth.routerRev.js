@@ -1,4 +1,6 @@
 //API para manejo de usuarios
+//COPIA del auth.router.js para revisar con Gustavo por un problema que tenia.
+//Lo dejo para revision futura.
 
 const express = require("express");
 const bcrypt = require("bcrypt");
